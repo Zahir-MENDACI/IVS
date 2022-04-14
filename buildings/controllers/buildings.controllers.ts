@@ -1,19 +1,16 @@
 import express from "express";
-import { MySqlService } from "../../config/MySqlService";
 import { BuildingsService } from "../services/buildings.services";
-
 
 
 export class BuildingsController {
     constructor() {
     }
 
- 
-
     addBuilding = async (req: express.Request, res: express.Response) => {
-        const organizationsService = BuildingsService.getInstance();
+        const buildingsService = BuildingsService.getInstance();
         try {
-            res.status(200).send();
+            const building = buildingsService.addBuilding(req.body, req.params)
+            res.status(200).send(building);
         } catch (error) {
             console.log(error)
             res.status(400).send(error);
@@ -21,10 +18,10 @@ export class BuildingsController {
     }
 
     getAllBuildings = async (req: express.Request, res: express.Response) => {
-        const organizationsService = BuildingsService.getInstance();
+        const buildingsService = BuildingsService.getInstance();
         try {
-            
-            res.status(200).send();
+            const buildings = await buildingsService.getBuildings(req.params)
+            res.status(200).send(buildings);
         } catch (error) {
             console.log(error)
             res.status(400).send(error);
@@ -32,19 +29,20 @@ export class BuildingsController {
     }
 
     getBuildingById = async (req: express.Request, res: express.Response) => {
-        const organizationsService = BuildingsService.getInstance();
+        const buildingsService = BuildingsService.getInstance();
         try {
-
-            res.status(200).send();
+            const building = await buildingsService.getBuildingById(req.params)
+            res.status(200).send(building);
         } catch (error) {
             console.log(error)
             res.status(400).send(error);
         }
     }
-
+    
     updateBuilding = async (req: express.Request, res: express.Response) => {
-        const organizationsService = BuildingsService.getInstance();
+        const buildingsService = BuildingsService.getInstance();
         try {
+            const building = await buildingsService.updateBuilding(req.body, req.params)
             res.status(200).send();
         } catch (error) {
             console.log(error)
@@ -53,8 +51,9 @@ export class BuildingsController {
     }
 
     deleteBuilding = async (req: express.Request, res: express.Response) => {
-        const organizationsService = BuildingsService.getInstance();
+        const buildingsService = BuildingsService.getInstance();
         try {
+            const building = await buildingsService.deleteBuilding(req.params)
             res.status(200).send();
         } catch (error) {
             console.log(error)

@@ -1,15 +1,15 @@
 class Building {
 
-  id: string;
+  id: number;
   name: string;
   zipcode: number;
-  organizationId: string
+  id_organization: number
 
-  constructor(id: string, name: string, zipcode: number, organizationId: string) {
+  constructor(id: number, name: string, zipcode: number, id_organization: number) {
     this.id = id;
     this.name = name;
     this.zipcode = zipcode;
-    this.organizationId = organizationId;
+    this.id_organization = id_organization;
   }
 
 }

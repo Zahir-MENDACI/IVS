@@ -3,7 +3,6 @@ import cors from "cors"
 import bodyParser from 'body-parser';
 
 import routes from './routes/routes';
-import { MySqlService } from './config/MySqlService';
 
 const app: express.Application = express();
 app.use(cors());

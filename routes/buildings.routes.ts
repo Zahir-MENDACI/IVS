@@ -1,16 +1,16 @@
 import express from "express"
-import { OrganizationsController } from "../organizations/controllers/organizations.controllers";
+import { BuildingsController } from "../buildings/controllers/buildings.controllers";
 
 
 const router = express.Router();
 
-const organizationsController = new OrganizationsController();
+const buildingsController = new BuildingsController();
 
-router.post('/organizations', organizationsController.addOrganization);
-router.get('/organizations', organizationsController.getAllOrganizations);
-router.get('/organizations/:id', organizationsController.getOrganizationById);
-router.put('/organizations/:id', organizationsController.updateOrganization);
-router.delete('/organizations/:id', organizationsController.deleteOrganization);
+router.post('/organizations/:organizationId/buildings', buildingsController.addBuilding);
+router.get('/organizations/:organizationId/buildings', buildingsController.getAllBuildings);
+router.get('/organizations/:organizationId/buildings/:id', buildingsController.getBuildingById);
+router.put('/organizations/:organizationId/buildings/:id', buildingsController.updateBuilding);
+router.delete('/organizations/:organizationId/buildings/:id', buildingsController.deleteBuilding);
 
 export default {
     routes: router

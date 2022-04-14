@@ -1,3 +1,4 @@
+import Organization from "../../models/Organization";
 import { OrganizationsDAO } from "../daos/organizations.daos";
 
 
@@ -19,7 +20,8 @@ export class OrganizationsService {
 
     async addOrganization(body: any) {
         try {
-            return 
+            const organization: Organization = new Organization(undefined, body.name)
+            return await this.dao.add(organization) 
         } catch (error) {
             throw error
         }
@@ -27,7 +29,7 @@ export class OrganizationsService {
 
     async getOrganizations() {
         try {
-            return 
+            return await this.dao.getOrganizations()
         } catch (error) {
             throw error
         }
@@ -35,7 +37,8 @@ export class OrganizationsService {
 
     async getOrganizationById(params: any) {
         try {
-            return 
+            const organizationId = params.id
+            return await this.dao.getOrganizationById(organizationId)
         } catch (error) {
             throw error
         }
@@ -43,7 +46,9 @@ export class OrganizationsService {
 
     async updateOrganization(body: any, params: any) {
         try {
-            return
+            const organizationId = params.id
+            const organization: Organization = new Organization(organizationId, body.name)
+            return await this.dao.updateOrganization(organizationId, organization)
         } catch (error) {
             throw error
         }
@@ -51,7 +56,8 @@ export class OrganizationsService {
 
     async deleteOrganization(params: any) {
         try {
-            return
+            const organizationId = params.id
+            return await this.dao.deleteOrganization(organizationId)
         } catch (error) {
             throw error
         }

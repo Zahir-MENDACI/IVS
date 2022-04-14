@@ -1,3 +1,4 @@
+import Building from "../../models/Building";
 import { BuildingsDAO } from "../daos/buildings.daos";
 
 
@@ -17,17 +18,20 @@ export class BuildingsService {
     }
 
 
-    async addBuilding(body: any) {
+    async addBuilding(body: any, params: any) {
         try {
-            return 
+            const organizationId: number = params.organizationId
+            const building: Building = new Building(undefined, body.name, body.zipcode, organizationId)
+            return await this.dao.add(organizationId, building) 
         } catch (error) {
             throw error
         }
     }
 
-    async getBuildings() {
+    async getBuildings(params: any) {
         try {
-            return 
+            const organizationId: number = params.organizationId
+            return await this.dao.getBuildings(organizationId)
         } catch (error) {
             throw error
         }
@@ -35,7 +39,9 @@ export class BuildingsService {
 
     async getBuildingById(params: any) {
         try {
-            return 
+            const buildingId: number = params.id
+            const organizationId: number = params.organizationId
+            return await this.dao.getBuildingById(organizationId, buildingId)
         } catch (error) {
             throw error
         }
@@ -43,7 +49,10 @@ export class BuildingsService {
 
     async updateBuilding(body: any, params: any) {
         try {
-            return
+            const buildingId: number = params.id
+            const organizationId: number= params.organizationId
+            const building: Building = new Building(buildingId, body.name, body.zipcode, organizationId)
+            return await this.dao.updateBuilding(organizationId, buildingId, building)
         } catch (error) {
             throw error
         }
@@ -51,7 +60,9 @@ export class BuildingsService {
 
     async deleteBuilding(params: any) {
         try {
-            return
+            const buildingId: number = params.id
+            const organizationId: number = params.organizationId
+            return await this.dao.deleteBuilding(organizationId, buildingId)
         } catch (error) {
             throw error
         }

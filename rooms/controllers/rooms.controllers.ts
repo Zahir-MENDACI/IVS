@@ -1,30 +1,27 @@
 import express from "express";
-import { MySqlService } from "../../config/MySqlService";
 import { RoomsService } from "../services/rooms.services";
-
 
 
 export class RoomsController {
     constructor() {
     }
 
- 
-
     addRoom = async (req: express.Request, res: express.Response) => {
-        const organizationsService = RoomsService.getInstance();
+        const roomsService = RoomsService.getInstance();
         try {
-            res.status(200).send();
+            const room = roomsService.addRoom(req.body, req.params)
+            res.status(200).send(room);
         } catch (error) {
-            console.log(error)
+            console.log("---", error)
             res.status(400).send(error);
         }
     }
 
     getAllRooms = async (req: express.Request, res: express.Response) => {
-        const organizationsService = RoomsService.getInstance();
+        const roomsService = RoomsService.getInstance();
         try {
-            
-            res.status(200).send();
+            const rooms = await roomsService.getRooms(req.params)
+            res.status(200).send(rooms);
         } catch (error) {
             console.log(error)
             res.status(400).send(error);
@@ -32,19 +29,20 @@ export class RoomsController {
     }
 
     getRoomById = async (req: express.Request, res: express.Response) => {
-        const organizationsService = RoomsService.getInstance();
+        const roomsService = RoomsService.getInstance();
         try {
-
-            res.status(200).send();
+            const room = await roomsService.getRoomById(req.params)
+            res.status(200).send(room);
         } catch (error) {
             console.log(error)
             res.status(400).send(error);
         }
     }
-
+    
     updateRoom = async (req: express.Request, res: express.Response) => {
-        const organizationsService = RoomsService.getInstance();
+        const roomsService = RoomsService.getInstance();
         try {
+            const room = await roomsService.updateRoom(req.body, req.params)
             res.status(200).send();
         } catch (error) {
             console.log(error)
@@ -53,8 +51,9 @@ export class RoomsController {
     }
 
     deleteRoom = async (req: express.Request, res: express.Response) => {
-        const organizationsService = RoomsService.getInstance();
+        const roomsService = RoomsService.getInstance();
         try {
+            const room = await roomsService.deleteRoom(req.params)
             res.status(200).send();
         } catch (error) {
             console.log(error)
