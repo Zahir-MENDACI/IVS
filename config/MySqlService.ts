@@ -1,5 +1,4 @@
 import mysql from "mysql2"
-import "dotenv/config"
 
 
 export class MySqlService {
@@ -9,11 +8,13 @@ export class MySqlService {
 
   constructor() {
     
+
+
     this.db = mysql.createConnection({
-        host: process.env.HOST,
-        user: process.env.USER,
-        password: process.env.PASSWORD,
-        database: process.env.DATABASE
+        host: "localhost",
+        user: "root",
+        password: "root",
+        database: "IVS"
       })
 
     this.db.query("CREATE DATABASE [IF NOT EXISTS] IVS")
