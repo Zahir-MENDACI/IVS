@@ -11,13 +11,13 @@ export class MySqlService {
 
 
     this.db = mysql.createConnection({
-        host: "localhost",
-        user: "root",
-        password: "root",
-        database: "IVS"
+        host: "sql11.freemysqlhosting.net",
+        user: "sql11486053",
+        password: "Qlmnbzs2rA",
+        database: "sql11486053"
       })
 
-    this.db.query("CREATE DATABASE [IF NOT EXISTS] IVS")
+    // this.db.query("CREATE DATABASE [IF NOT EXISTS] IVS")
 
     console.log("Created new instance of MySqlService");
   }
