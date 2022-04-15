@@ -1,6 +1,6 @@
 import { MySqlService } from "../../config/MySqlService";
 import Room from "../../models/Room";
-import mysql from "mysql2"
+import mysql, { ResultSetHeader } from "mysql2"
 import { Utils } from "../../utils/utils";
 
 export class RoomsDAO {
@@ -23,27 +23,34 @@ export class RoomsDAO {
 
 
 
-    async add(buildingId: number, room: Room) {
-        let returnValue: Room
+    async add(room: Room) {
         try {
-            const snapshot =  await this.utils.mySqlQuery("INSERT INTO Rooms SET ?", room)
-            console.log(snapshot)
-            return returnValue
-            
+            const writeResult: ResultSetHeader = await this.utils.mySqlQuery(`INSERT INTO Rooms SET ?`
+                , room) as ResultSetHeader
+            if (writeResult.affectedRows === 0) {
+                throw "error while adding room"
+            }
+            return "Room added"
         } catch (error: any) {
-            console.log("----", error)
-            if (error.code === "ER_NO_SUCH_TABLE"){
+            console.log(error)
+            if (error.code === "ER_NO_SUCH_TABLE") {
                 await this.utils.createRoomsTable()
-                this.add(buildingId, room)
+                this.add(room)
             }
             throw error
         }
     }
 
-    async getRooms(buildingId: number) {
+    async getRooms(organizationId: number, buildingId: number) {
         let returnValue: Room[] = []
         try {
-            const snapshot =  await this.utils.mySqlQuery("SELECT * FROM Rooms WHERE id_building = ?", buildingId)
+            const snapshot = await this.utils.mySqlQuery(`
+                SELECT * FROM Organizations o, Buildings as b, Rooms as r 
+                WHERE r.id_building = b.id
+                AND b.id_organization = o.id
+                AND o.id = ?
+                AND b.id = ?`
+                , [organizationId, buildingId])
             returnValue = snapshot as Room[]
             return returnValue
         } catch (error) {
@@ -51,34 +58,62 @@ export class RoomsDAO {
         }
     }
 
-    async getRoomById(buildingId: number, roomId: number) {
+    async getRoomById(organizationId: number, buildingId: number, roomId: number) {
         let returnValue: Room
         try {
-            const snapshot = await this.utils.mySqlQuery("SELECT * FROM Rooms WHERE id_building = ? AND id=?", [buildingId, roomId])
-            returnValue = snapshot as Room
+            const snapshot: any = await this.utils.mySqlQuery(`
+            SELECT * FROM Organizations o, Buildings as b, Rooms as r 
+            WHERE r.id_building = b.id
+            AND b.id_organization = o.id
+            AND o.id = ?
+            AND b.id = ?
+            AND r.id = ?`
+                , [organizationId, buildingId, roomId])
+            returnValue = snapshot[0] as Room
             return returnValue
         } catch (error) {
             throw error
         }
     }
 
-    async updateRoom(buildingId: number, roomId: number, room: Room) {
-        let returnValue: Room
+    async getNbPersonRoom(organizationId: number, buildingId: number, roomId: number) {
+        let returnValue: number
         try {
-            const snapshot = await this.utils.mySqlQuery("UPDATE Rooms SET ? WHERE id = ?", [room, roomId])
-            returnValue = snapshot as Room
+            const snapshot: any = await this.utils.mySqlQuery(`
+                SELECT nb_persons FROM Organizations o, Buildings as b, Rooms as r 
+                WHERE r.id_building = b.id
+                AND b.id_organization = o.id
+                AND o.id = ?
+                AND b.id = ?
+                AND r.id = ?`
+                , [organizationId, buildingId, roomId])
+            //Express can't return a number value, so we convert to string
+            returnValue = snapshot[0][Object.keys(snapshot[0])[0]].toString()
             return returnValue
         } catch (error) {
             throw error
         }
     }
-    
-    async deleteRoom(buildingId: number, roomId: number) {
-        let returnValue: Room
+
+    async updateRoom(roomId: number, room: Room) {
         try {
-            const snapshot = await this.utils.mySqlQuery("DELETE from Rooms WHERE id = ?", roomId)
-            returnValue = snapshot as Room
-            return returnValue
+            const writeResult: ResultSetHeader = await this.utils.mySqlQuery("UPDATE Rooms SET ? WHERE id = ?", [room, roomId]) as ResultSetHeader
+            if (writeResult.affectedRows === 0) {
+                throw "error while updating room"
+            }
+            return "Room updated"
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async deleteRoom(roomId: number) {
+        try {
+            const writeResult: ResultSetHeader = await this.utils.mySqlQuery("DELETE from Rooms WHERE id = ?", roomId) as ResultSetHeader
+            if (writeResult.affectedRows === 0) {
+                throw "error while deleting room"
+            }
+            return "Room deleted"
         } catch (error) {
             throw error
         }

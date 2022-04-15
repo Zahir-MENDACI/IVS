@@ -9,7 +9,7 @@ export class OrganizationsController {
     addOrganization = async (req: express.Request, res: express.Response) => {
         const organizationsService = OrganizationsService.getInstance();
         try {
-            const organization = organizationsService.addOrganization(req.body)
+            const organization = await organizationsService.addOrganization(req.body)
             res.status(200).send(organization);
         } catch (error) {
             console.log(error)
@@ -43,7 +43,7 @@ export class OrganizationsController {
     getOrganizationById = async (req: express.Request, res: express.Response) => {
         const organizationsService = OrganizationsService.getInstance();
         try {
-            const organization = await organizationsService.getOrganizationById(req.params)
+            const organization = await organizationsService.getOrganizationById(req.params, req.query)
             res.status(200).send(organization);
         } catch (error) {
             console.log(error)
@@ -55,7 +55,7 @@ export class OrganizationsController {
         const organizationsService = OrganizationsService.getInstance();
         try {
             const organization = await organizationsService.updateOrganization(req.body, req.params)
-            res.status(200).send();
+            res.status(200).send(organization);
         } catch (error) {
             console.log(error)
             res.status(400).send(error);
@@ -66,7 +66,7 @@ export class OrganizationsController {
         const organizationsService = OrganizationsService.getInstance();
         try {
             const organization = await organizationsService.deleteOrganization(req.params)
-            res.status(200).send();
+            res.status(200).send(organization);
         } catch (error) {
             console.log(error)
             res.status(400).send(error);

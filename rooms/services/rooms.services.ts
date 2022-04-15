@@ -1,3 +1,4 @@
+import { BuildingsDAO } from "../../buildings/daos/buildings.daos";
 import Room from "../../models/Room";
 import { RoomsDAO } from "../daos/rooms.daos";
 
@@ -20,9 +21,14 @@ export class RoomsService {
 
     async addRoom(body: any, params: any) {
         try {
+            const organizationId: number = params.organizationId
             const buildingId: number = params.buildingId
-            const room: Room = new Room(undefined, body.name, body.zipcode, buildingId)
-            return await this.dao.add(buildingId, room) 
+            const building = await BuildingsDAO.getInstance().getBuildingById(organizationId, buildingId)
+            if (!building){
+                return "Inexistant Building or Organization"
+            }
+            const room: Room = new Room(undefined, body.name, body.nb_persons, buildingId)
+            return await this.dao.add(room) 
         } catch (error) {
             throw error
         }
@@ -30,18 +36,34 @@ export class RoomsService {
 
     async getRooms(params: any) {
         try {
+            const organizationId: number = params.organizationId
             const buildingId: number = params.buildingId
-            return await this.dao.getRooms(buildingId)
+            const building = await BuildingsDAO.getInstance().getBuildingById(organizationId, buildingId)
+            if (!building){
+                return "Inexistant Building or Organization"
+            }
+            return await this.dao.getRooms(organizationId, buildingId)
         } catch (error) {
             throw error
         }
     }
 
-    async getRoomById(params: any) {
+    async getRoomById(params: any, query: any) {
         try {
-            const roomId: number = params.id
+            const organizationId: number = params.organizationId
             const buildingId: number = params.buildingId
-            return await this.dao.getRoomById(buildingId, roomId)
+            const roomId: number = params.id
+            const nb_persons: boolean = query.nb_persons !== undefined ? true : false
+            let returnValue
+            if (nb_persons) {
+                returnValue = await this.dao.getNbPersonRoom(organizationId, buildingId, roomId)
+            } else {
+                returnValue = await this.dao.getRoomById(organizationId, buildingId, roomId)
+            }
+            if (!returnValue){
+                throw "Inexistant Room"
+            }
+            return returnValue
         } catch (error) {
             throw error
         }
@@ -51,8 +73,13 @@ export class RoomsService {
         try {
             const roomId: number = params.id
             const buildingId: number= params.buildingId
-            const room: Room = new Room(roomId, body.name, body.zipcode, buildingId)
-            return await this.dao.updateRoom(buildingId, roomId, room)
+            const organizationId: number = params.organizationId
+            const building = await BuildingsDAO.getInstance().getBuildingById(organizationId, buildingId)
+            if (!building){
+                return "Inexistant Building or Organization"
+            }
+            const room: Room = new Room(roomId, body.name, body.nb_persons, buildingId)
+            return await this.dao.updateRoom(roomId, room)
         } catch (error) {
             throw error
         }
@@ -62,7 +89,12 @@ export class RoomsService {
         try {
             const roomId: number = params.id
             const buildingId: number = params.buildingId
-            return await this.dao.deleteRoom(buildingId, roomId)
+            const organizationId: number = params.organizationId
+            const building = await BuildingsDAO.getInstance().getBuildingById(organizationId, buildingId)
+            if (!building){
+                return "Inexistant Building or Organization"
+            }
+            return await this.dao.deleteRoom(roomId)
         } catch (error) {
             throw error
         }

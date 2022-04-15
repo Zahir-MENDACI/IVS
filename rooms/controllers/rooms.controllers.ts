@@ -9,10 +9,10 @@ export class RoomsController {
     addRoom = async (req: express.Request, res: express.Response) => {
         const roomsService = RoomsService.getInstance();
         try {
-            const room = roomsService.addRoom(req.body, req.params)
+            const room = await roomsService.addRoom(req.body, req.params)
             res.status(200).send(room);
         } catch (error) {
-            console.log("---", error)
+            console.log(error)
             res.status(400).send(error);
         }
     }
@@ -31,7 +31,7 @@ export class RoomsController {
     getRoomById = async (req: express.Request, res: express.Response) => {
         const roomsService = RoomsService.getInstance();
         try {
-            const room = await roomsService.getRoomById(req.params)
+            const room = await roomsService.getRoomById(req.params, req.query)
             res.status(200).send(room);
         } catch (error) {
             console.log(error)
@@ -43,7 +43,7 @@ export class RoomsController {
         const roomsService = RoomsService.getInstance();
         try {
             const room = await roomsService.updateRoom(req.body, req.params)
-            res.status(200).send();
+            res.status(200).send(room);
         } catch (error) {
             console.log(error)
             res.status(400).send(error);
@@ -54,7 +54,7 @@ export class RoomsController {
         const roomsService = RoomsService.getInstance();
         try {
             const room = await roomsService.deleteRoom(req.params)
-            res.status(200).send();
+            res.status(200).send(room);
         } catch (error) {
             console.log(error)
             res.status(400).send(error);

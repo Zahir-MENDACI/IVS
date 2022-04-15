@@ -9,7 +9,7 @@ export class BuildingsController {
     addBuilding = async (req: express.Request, res: express.Response) => {
         const buildingsService = BuildingsService.getInstance();
         try {
-            const building = buildingsService.addBuilding(req.body, req.params)
+            const building = await buildingsService.addBuilding(req.body, req.params)
             res.status(200).send(building);
         } catch (error) {
             console.log(error)
@@ -31,7 +31,7 @@ export class BuildingsController {
     getBuildingById = async (req: express.Request, res: express.Response) => {
         const buildingsService = BuildingsService.getInstance();
         try {
-            const building = await buildingsService.getBuildingById(req.params)
+            const building = await buildingsService.getBuildingById(req.params, req.query)
             res.status(200).send(building);
         } catch (error) {
             console.log(error)

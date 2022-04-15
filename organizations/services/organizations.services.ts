@@ -35,10 +35,21 @@ export class OrganizationsService {
         }
     }
 
-    async getOrganizationById(params: any) {
+    async getOrganizationById(params: any, query: any) {
         try {
             const organizationId = params.id
-            return await this.dao.getOrganizationById(organizationId)
+            const nb_persons: boolean = query.nb_persons !== undefined ? true : false
+            let organization
+            if (nb_persons) {
+                organization = await this.dao.getNbPersonOrganization(organizationId)
+            } else {
+                organization = await this.dao.getOrganizationById(organizationId)
+            }
+            console.log(organization)
+            if (!organization){
+                throw "Inexistant Organization"
+            }
+            return organization
         } catch (error) {
             throw error
         }
