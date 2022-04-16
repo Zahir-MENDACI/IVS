@@ -17,18 +17,6 @@ export class OrganizationsController {
         }
     }
 
-    /* 
-            // MySqlService.getInstance().db.query("CREATE TABLE organizations(id INT AUTO_INCREMENT, name VARCHAR(255), PRIMARY KEY (id))", err => {
-            // MySqlService.getInstance().db.query("CREATE TABLE buildings(id INT AUTO_INCREMENT, name VARCHAR(255), zipcode INT, id_organization INT, PRIMARY KEY (id),CONSTRAINT FK_Building_Organization FOREIGN KEY (id_organization)REFERENCES organizations(id))", err => {
-            MySqlService.getInstance().db.query("CREATE TABLE rooms(id INT AUTO_INCREMENT, name VARCHAR(255), nb_persons INT, id_building INT, PRIMARY KEY (id),CONSTRAINT FK_Room_Building FOREIGN KEY (id_building)REFERENCES buildings(id))", err => {
-                if (err) {
-                    throw err
-                }
-                res.status(200).send("success");
-            })
-
-    */
-
     getAllOrganizations = async (req: express.Request, res: express.Response) => {
         const organizationsService = OrganizationsService.getInstance();
         try {
