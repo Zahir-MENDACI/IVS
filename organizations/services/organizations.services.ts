@@ -45,7 +45,6 @@ export class OrganizationsService {
             } else {
                 organization = await this.dao.getOrganizationById(organizationId)
             }
-            console.log(organization)
             if (!organization){
                 throw "Inexistant Organization"
             }

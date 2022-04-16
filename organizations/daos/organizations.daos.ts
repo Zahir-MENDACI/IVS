@@ -66,7 +66,6 @@ export class OrganizationsDAO {
             for(const building of buildings) {
                 const snapshot: any = await this.utils.mySqlQuery("SELECT SUM(nb_persons) FROM Rooms WHERE id_building = ?", building.id)
                 let count: string = snapshot[0][Object.keys(snapshot[0])[0]] ?? "0"
-                console.log(count)
                 returnValue = returnValue + parseInt(count)
             }
             //Express can't return a number value, so we convert to string
