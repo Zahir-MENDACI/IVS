@@ -17,8 +17,6 @@ export class MySqlService {
         database: "sql11486053"
       })
 
-    // this.db.query("CREATE DATABASE [IF NOT EXISTS] IVS")
-
     console.log("Created new instance of MySqlService");
   }
 
