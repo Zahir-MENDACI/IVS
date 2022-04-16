@@ -34,9 +34,19 @@ export class Utils {
     }
   }
 
+  async createTables() {
+    try{
+      await this.createOrganizationsTable()
+      await this.createBuildingsTable()
+      await this.createRoomsTable()
+    } catch (e) {
+      throw e
+    }
+  }
+
   async createOrganizationsTable() {
     try {
-        new Promise ((resolve, reject) => {
+        return new Promise ((resolve, reject) => {
           MySqlService.getInstance().db.query("CREATE TABLE Organizations(id INT AUTO_INCREMENT, name VARCHAR(255), PRIMARY KEY (id))", err => {
             if (err) {
               reject(err)
@@ -50,8 +60,8 @@ export class Utils {
   }
   async createBuildingsTable() {
     try {
-      new Promise ((resolve, reject) => {
-              MySqlService.getInstance().db.query("CREATE TABLE Buildings(id INT AUTO_INCREMENT, name VARCHAR(255), zipcode INT, id_organization INT, PRIMARY KEY (id),CONSTRAINT FK_Building_Organization FOREIGN KEY (id_organization)REFERENCES Oùrganizations(id))", err => {
+      return new Promise ((resolve, reject) => {
+              MySqlService.getInstance().db.query("CREATE TABLE Buildings(id INT AUTO_INCREMENT, name VARCHAR(255), zipcode INT, id_organization INT, PRIMARY KEY (id),CONSTRAINT FK_Building_Organization FOREIGN KEY (id_organization)REFERENCES Organizations(id))", err => {
             if (err) {
               reject(err)
             }
@@ -64,7 +74,7 @@ export class Utils {
   }
   async createRoomsTable() {
     try {
-        new Promise ((resolve, reject) => {
+        return new Promise ((resolve, reject) => {
           MySqlService.getInstance().db.query("CREATE TABLE Rooms(id INT AUTO_INCREMENT, name VARCHAR(255), nb_persons INT, id_building INT, PRIMARY KEY (id),CONSTRAINT FK_Room_Building FOREIGN KEY (id_building)REFERENCES Buildings(id))", err => {
             if (err) {
               reject(err)

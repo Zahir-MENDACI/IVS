@@ -59,11 +59,10 @@ export class BuildingsService {
                 } else {
                     building = await this.dao.getBuildingById(organizationId, buildingId)
                 }
-                if (!!building) {
-                    return building
-                } else {
+                if (!building && building !== 0) {
                     return "Inexistant building"
                 }
+                return building
             }
         } catch (error) {
             throw error

@@ -32,10 +32,6 @@ export class BuildingsDAO {
             return "Building added"            
         } catch (error: any) {
             console.log(error)
-            if (error.code === "ER_NO_SUCH_TABLE"){
-                await this.utils.createBuildingsTable()
-                this.add(organizationId, building)
-            }
             throw error
         }
     }
@@ -73,7 +69,7 @@ export class BuildingsDAO {
                 AND b.id = ?`
             , [organizationId, buildingId])
             //Express can't return a number value, so we convert to string
-            returnValue = snapshot[0][Object.keys(snapshot[0])[0]]?.toString()
+            returnValue = snapshot[0][Object.keys(snapshot[0])[0]]?.toString() ?? "0"
             return returnValue
         } catch (error) {
             throw error

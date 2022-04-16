@@ -30,13 +30,9 @@ export class RoomsDAO {
             if (writeResult.affectedRows === 0) {
                 throw "error while adding room"
             }
-            return "Room added"
+        return "Room added"
         } catch (error: any) {
             console.log(error)
-            if (error.code === "ER_NO_SUCH_TABLE") {
-                await this.utils.createRoomsTable()
-                this.add(room)
-            }
             throw error
         }
     }

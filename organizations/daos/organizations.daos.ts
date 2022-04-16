@@ -33,10 +33,6 @@ export class OrganizationsDAO {
             
         } catch (error: any) {
             console.log(error)
-            if (error.code === "ER_NO_SUCH_TABLE"){
-                await this.utils.createOrganizationsTable()
-                this.add(organization)
-            }
             throw error
         }
     }
@@ -69,7 +65,9 @@ export class OrganizationsDAO {
             const buildings: any = await this.utils.mySqlQuery("SELECT id FROM Buildings WHERE id_organization = ?", organizationId)
             for(const building of buildings) {
                 const snapshot: any = await this.utils.mySqlQuery("SELECT SUM(nb_persons) FROM Rooms WHERE id_building = ?", building.id)
-                returnValue = returnValue + parseInt(snapshot[0][Object.keys(snapshot[0])[0]])
+                let count: string = snapshot[0][Object.keys(snapshot[0])[0]] ?? "0"
+                console.log(count)
+                returnValue = returnValue + parseInt(count)
             }
             //Express can't return a number value, so we convert to string
             return returnValue.toString()
